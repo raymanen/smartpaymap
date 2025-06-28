@@ -21,6 +21,7 @@ wheels/
 .installed.cfg
 *.egg
 .env
+.history/
 
 # Node/React
 node_modules/
