@@ -13,10 +13,18 @@ I’m here to learn fast, contribute with care, and grow alongside the mission o
 The project below, SmartPayMap, is my way of saying:
 "I’m serious about this opportunity, and I’m ready to earn it."
 
+Project screenshots
 <img width="1470" alt="Screenshot 2025-06-30 at 14 11 55" src="https://github.com/user-attachments/assets/6c685029-7db5-40cd-87ad-303d6db78ed4" />
-
+<img width="1428" alt="Screenshot 2025-06-30 at 14 12 55" src="https://github.com/user-attachments/assets/a76d61da-aad2-43aa-b906-40a23cca99b4" />
+![Screenshot 2025-06-30 at 14 14 31](https://github.com/user-attachments/assets/a49e7f10-ee84-4617-a37b-4c5a492a9673)
+![Screenshot 2025-06-30 at 14 15 11](https://github.com/user-attachments/assets/1049fd3a-9a7d-4fca-85d7-92619334d654)
+![Screenshot 2025-06-30 at 14 16 53](https://github.com/user-attachments/assets/81ce30ca-ea42-48ff-8d94-65133d5524ac)
+![Screenshot 2025-06-30 at 14 17 29](https://github.com/user-attachments/assets/5c62dd43-7359-411c-9fa0-1447d473f288)
+![Screenshot 2025-06-30 at 14 17 44](https://github.com/user-attachments/assets/ace02ae7-4713-4d0c-8332-a8f736f6dc1c)
 
 # SmartPayMap
+
+
 
 **AI-Powered Payroll Data Mapping Tool**
 
