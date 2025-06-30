@@ -1,0 +1,11 @@
+first_name,last_name,employee_id,currency_code,basic_salary,bonus,tax_rate,location,employment_date
+John,Doe,1001,GBP,56000,5000,0.22,London,2020-03-15
+Jane,Smith,1002,USD,68000,7000,0.25,New York,2019-07-01
+Alice,Brown,1003,EUR,47000,3500,0.20,Berlin,2021-01-20
+Carlos,Santana,1004,MXN,520000,15000,0.28,Mexico City,2018-11-12
+Aiko,Tanaka,1005,JPY,7400000,300000,0.18,Tokyo,2022-05-30
+Samir,Gupta,1006,INR,950000,100000,0.30,Delhi,2017-08-25
+Emma,Johnson,1007,CAD,61000,4000,0.23,Toronto,2020-10-10
+Léa,Moreau,1008,EUR,59000,3800,0.21,Paris,2021-06-18
+Chen,Wang,1009,CNY,480000,20000,0.19,Beijing,2016-02-14
+Ivan,Petrov,1010,RUB,820000,30000,0.26,Moscow,2015-12-01

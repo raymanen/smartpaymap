@@ -1,22 +1,79 @@
 import React, { useState } from 'react';
 import { UploadButton } from '../components/UploadButton';
 import { MappingTable } from '../components/MappingTable';
+import { Alert, Snackbar } from '@mui/material';
+import axios from 'axios';
+
+interface UploadResponse {
+  headers: string[];
+  rows: string[][];
+}
 
 export const Home: React.FC = () => {
-  const [sourceFields, setSourceFields] = useState<string[]>([]);
-  const [targetFields, setTargetFields] = useState<string[]>([]);
-  const [mappings, setMappings] = useState<Record<string, string>>({});
+  const [headers, setHeaders] = useState<string[]>([]);
+  const [rows, setRows] = useState<string[][]>([]);
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
 
   const handleFileUpload = async (file: File) => {
-    // TODO: Implement file processing logic
-    console.log('File uploaded:', file.name);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await axios.post<UploadResponse>(
+        'http://localhost:8000/upload',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      setHeaders(response.data.headers);
+      setRows(response.data.rows);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      setNotification({
+        open: true,
+        message: 'Failed to upload file. Please try again.',
+        severity: 'error'
+      });
+    }
   };
 
-  const handleMappingChange = (source: string, target: string) => {
-    setMappings((prev) => ({
-      ...prev,
-      [source]: target,
-    }));
+  const handleSubmitMappings = async (finalMappings: Record<string, string>) => {
+    try {
+      const response = await axios.post('http://localhost:8000/finalize', {
+        mappings: finalMappings
+      });
+
+      if (response.data.mapping_saved) {
+        setNotification({
+          open: true,
+          message: 'Mappings saved successfully!',
+          severity: 'success'
+        });
+      }
+    } catch (error) {
+      console.error('Error saving mappings:', error);
+      setNotification({
+        open: true,
+        message: 'Failed to save mappings. Please try again.',
+        severity: 'error'
+      });
+    }
+  };
+
+  const handleCloseNotification = () => {
+    setNotification(prev => ({ ...prev, open: false }));
   };
 
   return (
@@ -33,20 +90,32 @@ export const Home: React.FC = () => {
           <UploadButton onUpload={handleFileUpload} />
         </section>
 
-        {sourceFields.length > 0 && (
+        {headers.length > 0 && (
           <section>
             <h2 className="text-xl font-semibold text-gray-700 mb-4">
               Map Your Fields
             </h2>
             <MappingTable
-              sourceFields={sourceFields}
-              targetFields={targetFields}
-              mappings={mappings}
-              onMappingChange={handleMappingChange}
+              headers={headers}
+              rows={rows}
+              onSubmit={handleSubmitMappings}
             />
           </section>
         )}
       </div>
+
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+      >
+        <Alert 
+          onClose={handleCloseNotification} 
+          severity={notification.severity}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }; 

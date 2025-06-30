@@ -1,11 +1,16 @@
-import React from 'react';
-import { Home } from './pages/Home';
+import { Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { UploadPreview } from './components/UploadPreview';
+
+const theme = createTheme();
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Home />
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="lg">
+        <UploadPreview />
+      </Container>
+    </ThemeProvider>
   );
 }
 
