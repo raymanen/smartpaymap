@@ -1,5 +1,5 @@
 import pytest
-from backend.llm_utils import generate_llm_prompt, get_mapping_suggestion
+from backend.app.utils.llm_utils import generate_llm_prompt, get_mapping_suggestions, get_mock_response
 
 def test_generate_llm_prompt():
     """
@@ -15,7 +15,7 @@ def test_llm_mock_response():
     Verifies that the mock response contains expected mappings and structure.
     """
     # Get mock response
-    result = get_mapping_suggestion("dummy", mock=True)
+    result = get_mock_response()
 
     # Test response structure
     assert isinstance(result, dict), "Response should be a dictionary"

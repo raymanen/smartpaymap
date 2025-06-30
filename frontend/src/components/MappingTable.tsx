@@ -1,469 +1,337 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
-  CircularProgress,
-  FormControl,
-  MenuItem,
-  Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Paper,
   Typography,
+  Autocomplete,
+  TextField,
   Alert,
-  SelectChangeEvent,
+  CircularProgress,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Collapse,
-  IconButton,
-  useTheme,
-  useMediaQuery,
+  Chip,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import WarningIcon from '@mui/icons-material/Warning';
 import ErrorIcon from '@mui/icons-material/Error';
+import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
-import RefreshIcon from '@mui/icons-material/Refresh';
-
-// Standard fields that can be mapped to
-const STANDARD_FIELDS = [
-  "full_name",      // For employee name fields
-  "currency",       // For currency codes/types
-  "base_salary",    // For base salary amount
-  "bonus",          // For bonus amounts
-  "total_salary",   // For combined salary calculations
-  "tax_rate",       // For tax percentage/rate
-  "location",       // For location/city names
-  "employee_id",    // For employee identifiers
-  "hire_date",      // For employment/hire dates
-  "other"          // For fields that don't match standard categories
-] as const;
-
-// Helper function to format field names for display
-const formatFieldName = (field: string): string => {
-  return field
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-};
-
-type StandardField = typeof STANDARD_FIELDS[number];
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 
 interface MappingTableProps {
   headers: string[];
-  rows?: string[][];  // Optional sample data
-  onSubmit: (finalMappings: Record<string, string>) => void;
+  rows?: string[][];
+  onSubmit: (mappings: Record<string, string>) => void;
 }
 
-interface Mapping {
-  suggestedField: StandardField | '';
-  isOverridden: boolean;
-  originalSuggestion: StandardField | '';
-}
-
+// Backend response type
 interface AnalyzeResponse {
   mappings: Record<string, string>;
   notes: string[];
 }
 
-interface LoadingState {
-  analyzing: boolean;
-  submitting: boolean;
+// State for each field mapping
+interface FieldMapping {
+  currentValue: string;
+  originalSuggestion: string;
+  isOverridden: boolean;
 }
 
-interface ErrorState {
-  analyze: string | null;
-  submit: string | null;
-}
-
-interface SubmitState {
-  isSubmitted: boolean;
-  showSuccess: boolean;
-}
+// Available standard fields for mapping
+const standardFields = [
+  "full_name",
+  "first_name",
+  "last_name", 
+  "currency",
+  "currency_code",
+  "basic_salary",
+  "salary",
+  "bonus",
+  "tax_rate",
+  "country_code",
+  "city",
+  "location",
+  "employee_id",
+  "hire_date",
+  "total_salary",
+  "other"
+];
 
 export const MappingTable: React.FC<MappingTableProps> = ({ headers, rows = [], onSubmit }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
-  // Enhanced state management
-  const [mappings, setMappings] = useState<Record<string, Mapping>>({});
-  const [loadingState, setLoadingState] = useState<LoadingState>({
-    analyzing: true,
-    submitting: false
-  });
-  const [errorState, setErrorState] = useState<ErrorState>({
-    analyze: null,
-    submit: null
-  });
-  const [submitState, setSubmitState] = useState<SubmitState>({
-    isSubmitted: false,
-    showSuccess: false
-  });
+  // State management
+  const [mappings, setMappings] = useState<Record<string, FieldMapping>>({});
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [aiNotes, setAiNotes] = useState<string[]>([]);
 
-  // Derived states for UI control
-  const isAnalyzing = loadingState.analyzing;
-  const isSubmitting = loadingState.submitting;
-  const hasAnalyzeError = Boolean(errorState.analyze);
-  const hasSubmitError = Boolean(errorState.submit);
-  const allFieldsMapped = Object.values(mappings).every(m => m.suggestedField !== '');
-  const canSubmit = allFieldsMapped && !isSubmitting && !hasAnalyzeError && !submitState.isSubmitted;
-
-  // Reset function with enhanced state management
-  const handleReset = () => {
-    setSubmitState({
-      isSubmitted: false,
-      showSuccess: false
-    });
-    setErrorState({
-      analyze: null,
-      submit: null
-    });
-    
-    // Reset mappings to original AI suggestions
-    const resetMappings: Record<string, Mapping> = {};
-    Object.entries(mappings).forEach(([header, mapping]) => {
-      resetMappings[header] = {
-        ...mapping,
-        suggestedField: mapping.originalSuggestion,
-        isOverridden: false
-      };
-    });
-    setMappings(resetMappings);
-  };
-
-  // Fetch AI suggestions with enhanced error handling
+  // Fetch AI suggestions when component mounts
   useEffect(() => {
-    const fetchMappingSuggestions = async () => {
-      try {
-        setLoadingState(prev => ({ ...prev, analyzing: true }));
-        setErrorState(prev => ({ ...prev, analyze: null }));
-
-        const response = await axios.post<AnalyzeResponse>('http://localhost:8000/analyze', {
-          headers,
-          rows
-        });
-
-        // Transform API response into our mapping format
-        const initialMappings: Record<string, Mapping> = {};
-        headers.forEach(header => {
-          const suggestion = response.data.mappings[header] || '';
-          initialMappings[header] = {
-            suggestedField: suggestion as StandardField,
-            isOverridden: false,
-            originalSuggestion: suggestion as StandardField
-          };
-        });
-
-        setMappings(initialMappings);
-        setAiNotes(response.data.notes);
-      } catch (err) {
-        const errorMessage = err instanceof Error 
-          ? err.message 
-          : '⚠ Failed to load mapping suggestions';
-        setErrorState(prev => ({ ...prev, analyze: errorMessage }));
-      } finally {
-        setLoadingState(prev => ({ ...prev, analyzing: false }));
-      }
-    };
-
-    if (headers.length > 0) {
-      fetchMappingSuggestions();
-    }
+    fetchMappingSuggestions();
   }, [headers]);
 
-  // Handle mapping changes with accessibility
-  const handleMappingChange = (header: string, newValue: string) => {
+  // Fetch mapping suggestions from backend
+  const fetchMappingSuggestions = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch('http://localhost:8000/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          headers,
+          rows: rows.slice(0, 5) // Send first 5 rows as sample data
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get mapping suggestions');
+      }
+
+      const data: AnalyzeResponse = await response.json();
+      
+      // Initialize mappings state with AI suggestions
+      const initialMappings: Record<string, FieldMapping> = {};
+      headers.forEach(header => {
+        const suggestion = data.mappings[header] || '';
+        initialMappings[header] = {
+          currentValue: suggestion,
+          originalSuggestion: suggestion,
+          isOverridden: false
+        };
+      });
+
+      setMappings(initialMappings);
+      setAiNotes(data.notes);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to analyze headers');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle field mapping changes
+  const handleMappingChange = (header: string, newValue: string | null) => {
     setMappings(prev => ({
       ...prev,
       [header]: {
         ...prev[header],
-        suggestedField: newValue as StandardField,
-        isOverridden: newValue !== prev[header].originalSuggestion
+        currentValue: newValue || '',
+        isOverridden: (newValue || '') !== prev[header].originalSuggestion
       }
     }));
   };
 
-  // Get status icon based on mapping state
-  const getStatusIcon = (mapping: Mapping) => {
-    if (!mapping.suggestedField) {
-      return <ErrorIcon color="error" titleAccess="Unmapped field" />;
-    }
-    if (mapping.isOverridden) {
-      return <WarningIcon color="warning" titleAccess="Manually overridden" />;
-    }
-    return <CheckCircleIcon color="success" titleAccess="Accepted AI suggestion" />;
+  // Reset a field to AI suggestion
+  const handleResetField = (header: string) => {
+    setMappings(prev => ({
+      ...prev,
+      [header]: {
+        ...prev[header],
+        currentValue: prev[header].originalSuggestion,
+        isOverridden: false
+      }
+    }));
   };
 
-  // Get icon for AI note based on content
-  const getNoteIcon = (note: string) => {
-    const lowerNote = note.toLowerCase();
-    if (lowerNote.includes('missing')) {
-      return <ErrorIcon color="error" />;
+  // Get status for a field mapping
+  const getFieldStatus = (mapping: FieldMapping) => {
+    if (!mapping.currentValue) {
+      return {
+        icon: <ErrorIcon color="error" />,
+        text: 'Failed to map',
+        color: 'error.main'
+      };
     }
-    if (lowerNote.includes('merge') || lowerNote.includes('warning')) {
-      return <WarningIcon color="warning" />;
+    if (mapping.currentValue === mapping.originalSuggestion && mapping.originalSuggestion) {
+      return {
+        icon: <CheckCircleIcon color="success" />,
+        text: 'AI Suggested',
+        color: 'success.main'
+      };
     }
-    return <InfoIcon color="info" />;
+    return {
+      icon: <WarningIcon color="warning" />,
+      text: 'Modified',
+      color: 'warning.main'
+    };
   };
 
-  // Enhanced submit handler with loading states
+  // Check if all fields are mapped
+  const areAllFieldsMapped = () => {
+    return headers.every(header => mappings[header]?.currentValue);
+  };
+
+  // Handle form submission
   const handleSubmit = async () => {
-    try {
-      setLoadingState(prev => ({ ...prev, submitting: true }));
-      setErrorState(prev => ({ ...prev, submit: null }));
+    if (!areAllFieldsMapped()) {
+      setError('Please map all fields before submitting');
+      return;
+    }
 
+    try {
+      setSubmitting(true);
+      setError(null);
+
+      // Convert mappings to the format expected by parent
       const finalMappings: Record<string, string> = {};
       Object.entries(mappings).forEach(([header, mapping]) => {
-        if (mapping.suggestedField) {
-          finalMappings[header] = mapping.suggestedField;
-        }
+        finalMappings[header] = mapping.currentValue;
       });
 
       await onSubmit(finalMappings);
-
-      setSubmitState({
-        isSubmitted: true,
-        showSuccess: true
-      });
-
-      // Auto-hide success message
-      setTimeout(() => {
-        setSubmitState(prev => ({
-          ...prev,
-          showSuccess: false
-        }));
-      }, 5000);
-
     } catch (err) {
-      const errorMessage = err instanceof Error 
-        ? err.message 
-        : '❌ Failed to submit mappings';
-      setErrorState(prev => ({ ...prev, submit: errorMessage }));
+      setError(err instanceof Error ? err.message : 'Failed to save mappings');
     } finally {
-      setLoadingState(prev => ({ ...prev, submitting: false }));
+      setSubmitting(false);
     }
   };
 
-  // Loading state UI
-  if (isAnalyzing) {
+  if (loading) {
     return (
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          flexDirection: 'column',
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          minHeight: 200,
-          gap: 2
-        }}
-      >
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
         <CircularProgress />
-        <Typography color="text.secondary">
-          Loading suggestions...
-        </Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <Typography variant="h6" gutterBottom>
-        Field Mapping Suggestions
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Typography variant="h6" sx={{ textAlign: 'center' }}>
+        Map Your Fields
       </Typography>
 
-      {/* Error Alerts */}
-      {errorState.analyze && (
-        <Alert 
-          severity="error" 
-          sx={{ mb: 2 }}
-          role="alert"
-        >
-          {errorState.analyze}
+      {error && (
+        <Alert severity="error" sx={{ width: '100%' }}>
+          {error}
         </Alert>
       )}
 
-      {errorState.submit && (
-        <Alert 
-          severity="error" 
-          sx={{ mb: 2 }}
-          role="alert"
-        >
-          {errorState.submit}
-        </Alert>
-      )}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>CSV Header</TableCell>
+              <TableCell>Map To</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {headers.map((header) => {
+              const mapping = mappings[header];
+              const status = mapping ? getFieldStatus(mapping) : { icon: <ErrorIcon color="error" />, text: 'Not initialized', color: 'error.main' };
 
-      {submitState.showSuccess && (
-        <Alert 
-          severity="success" 
-          sx={{ mb: 2 }}
-          role="alert"
-        >
-          ✅ Mappings saved successfully!
-        </Alert>
-      )}
-
-      {/* Mapping Table */}
-      <Paper 
-        elevation={2} 
-        sx={{ 
-          mb: 3,
-          overflow: 'hidden' // Ensures clean mobile scrolling
-        }}
-      >
-        <TableContainer 
-          sx={{ 
-            maxHeight: 400,
-            width: '100%',
-            overflowX: isMobile ? 'auto' : 'hidden'
-          }}
-        >
-          <Table 
-            stickyHeader 
-            aria-label="field mapping table"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell 
-                  sx={{ 
-                    fontWeight: 'bold', 
-                    backgroundColor: 'background.paper',
-                    minWidth: isMobile ? 150 : 'auto'
-                  }}
-                >
-                  CSV Header
-                </TableCell>
-                <TableCell 
-                  sx={{ 
-                    fontWeight: 'bold', 
-                    backgroundColor: 'background.paper',
-                    minWidth: isMobile ? 200 : 'auto'
-                  }}
-                >
-                  Standard Field
-                </TableCell>
-                <TableCell 
-                  sx={{ 
-                    fontWeight: 'bold', 
-                    backgroundColor: 'background.paper',
-                    width: 100,
-                    minWidth: isMobile ? 100 : 'auto'
-                  }}
-                >
-                  Status
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {headers.map(header => (
+              return (
                 <TableRow key={header}>
                   <TableCell>{header}</TableCell>
                   <TableCell>
-                    <FormControl 
-                      fullWidth 
-                      size="small"
-                      error={!mappings[header]?.suggestedField}
-                    >
-                      <Select
-                        value={mappings[header]?.suggestedField || ''}
-                        onChange={(e: SelectChangeEvent) => 
-                          handleMappingChange(header, e.target.value)
-                        }
-                        disabled={submitState.isSubmitted}
-                        renderValue={(value) => formatFieldName(value as string)}
-                        aria-label={`Map ${header} to standard field`}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        {STANDARD_FIELDS.map(field => (
-                          <MenuItem 
-                            key={field} 
-                            value={field}
-                            aria-label={formatFieldName(field)}
-                          >
-                            {formatFieldName(field)}
-                            {field === 'other' && ' (Unmapped Field)'}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <Autocomplete
+                      value={mapping?.currentValue || null}
+                      onChange={(_, newValue) => handleMappingChange(header, newValue)}
+                      options={standardFields}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          size="small"
+                          error={!mapping?.currentValue}
+                          placeholder={mapping?.originalSuggestion || 'Select field...'}
+                          helperText={mapping?.originalSuggestion ? `AI suggests: ${mapping.originalSuggestion}` : ''}
+                        />
+                      )}
+                      disabled={submitting}
+                      renderOption={(props, option) => (
+                        <li {...props}>
+                          {option === mapping?.originalSuggestion ? (
+                            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 1 }}>
+                              <span>{option.replace(/_/g, ' ')}</span>
+                              <Chip 
+                                size="small" 
+                                label="AI Suggested" 
+                                color="success" 
+                                sx={{ ml: 'auto' }}
+                              />
+                            </Box>
+                          ) : (
+                            option.replace(/_/g, ' ')
+                          )}
+                        </li>
+                      )}
+                    />
                   </TableCell>
-                  <TableCell>
-                    {mappings[header] && getStatusIcon(mappings[header])}
+                  <TableCell align="center">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                      {status.icon}
+                      <Typography variant="body2" sx={{ color: status.color }}>
+                        {status.text}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    {mapping?.isOverridden && mapping.originalSuggestion && (
+                      <Button
+                        startIcon={<AutorenewIcon />}
+                        size="small"
+                        onClick={() => handleResetField(header)}
+                        title="Reset to AI suggestion"
+                      >
+                        Reset
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-      {/* Action Buttons */}
-      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-        <LoadingButton
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          disabled={!canSubmit}
-          loading={isSubmitting}
-          loadingPosition="start"
-          startIcon={submitState.isSubmitted ? <CheckCircleIcon /> : undefined}
-        >
-          {isSubmitting ? 'Submitting mappings...' : 
-           submitState.isSubmitted ? '✅ Submitted!' : 
-           'Submit Mappings'}
-        </LoadingButton>
-
-        {submitState.isSubmitted && (
-          <Button
-            variant="outlined"
-            color="primary"
-            startIcon={<RefreshIcon />}
-            onClick={handleReset}
-            aria-label="Reset mappings and try again"
-          >
-            Try Again
-          </Button>
-        )}
-      </Box>
-
-      {/* AI Notes Section */}
       {aiNotes.length > 0 && (
-        <Box 
-          sx={{ mt: 3, mb: 3 }}
-          role="complementary"
-          aria-label="AI suggestions and notes"
-        >
-          <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 'bold' }}>
-            Notes from AI
+        <Paper sx={{ p: 2 }}>
+          <Typography variant="subtitle2" gutterBottom>
+            AI Suggestions
           </Typography>
-          <Paper elevation={1} sx={{ p: 2, backgroundColor: 'background.paper' }}>
-            <List dense>
-              {aiNotes.map((note, index) => (
-                <ListItem 
-                  key={index}
-                  role="listitem"
-                  aria-label={`AI Note ${index + 1}`}
-                >
-                  <ListItemIcon>
-                    {getNoteIcon(note)}
-                  </ListItemIcon>
-                  <ListItemText primary={note} />
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
-        </Box>
+          <List dense>
+            {aiNotes.map((note, index) => (
+              <ListItem key={index}>
+                <ListItemIcon sx={{ minWidth: 36 }}>
+                  <InfoIcon color="info" fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary={note} />
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
       )}
+
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={submitting || !areAllFieldsMapped()}
+          sx={{ minWidth: 200 }}
+        >
+          {submitting ? (
+            <>
+              <CircularProgress size={20} sx={{ mr: 1 }} />
+              Saving...
+            </>
+          ) : (
+            'Save Mappings'
+          )}
+        </Button>
+      </Box>
     </Box>
   );
 }; 

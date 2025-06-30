@@ -1,0 +1,34 @@
+{
+  "name": "smartpaymap",
+  "version": "1.0.0",
+  "description": "AI-Powered Payroll Data Mapping Tool",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "backend": "cd backend && ./start.sh",
+    "frontend": "cd frontend && npm run dev",
+    "install-deps": "cd backend && pip install -r requirements.txt && cd ../frontend && npm install",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "build-all": "npm run build && cd backend && python -c 'print(\"Backend ready to deploy\")'",
+    "clean": "cd frontend && rm -rf dist node_modules/.vite && cd ../backend && rm -rf __pycache__ .pytest_cache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/smartpaymap.git"
+  },
+  "keywords": [
+    "payroll",
+    "data-mapping",
+    "ai",
+    "csv",
+    "react",
+    "fastapi",
+    "typescript",
+    "python"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 

@@ -4,7 +4,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -20,24 +19,54 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.pytest_cache/
+.coverage
+htmlcov/
 .env
-.history/
+env/
+venv/
+ENV/
 
-# Node/React
+# Node
 node_modules/
-/dist
-/build
-.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# IDE
+# IDEs and editors
 .idea/
 .vscode/
 *.swp
 *.swo
+.DS_Store
+Thumbs.db
+
+# Build outputs
+/dist
+/build
+/.next
+/out
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env*.local
+.env
+.env.development
+.env.test
+.env.production
+
+# Misc
+.DS_Store
+*.pem
+.vercel
