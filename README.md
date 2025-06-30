@@ -13,6 +13,7 @@ I’m here to learn fast, contribute with care, and grow alongside the mission o
 The project below, SmartPayMap, is my way of saying:
 "I’m serious about this opportunity, and I’m ready to earn it."
 
+<img width="1470" alt="Screenshot 2025-06-30 at 14 11 55" src="https://github.com/user-attachments/assets/6c685029-7db5-40cd-87ad-303d6db78ed4" />
 
 
 # SmartPayMap
