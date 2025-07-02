@@ -1,0 +1,41 @@
+EmployeeNumber,FullName,PayCurrency,MonthlyPay,JoiningDate,City,TaxBracket,AdditionalIncentive
+3001,Sheri Farrell,MXN,5702,2025-05-17,Sydney,0.18,6352
+3002,Kimberly Ross,AUD,4822,2025-04-19,Toronto,0.22,5467
+3003,Gail Davenport,JPY,4821,2023-09-26,Sydney,0.2,4493
+3004,Robert Gomez,MXN,6570,2025-05-10,Sydney,0.25,4940
+3005,Robert Rivera,EUR,7913,2023-01-29,Toronto,0.18,4249
+3006,Anthony Mckenzie,INR,6773,2020-08-14,London,0.25,1550
+3007,Kenneth Clark,AUD,5468,2025-05-05,London,0.18,2320
+3008,Joseph Joseph,MXN,6576,2023-12-02,Berlin,0.22,604
+3009,Kristin Smith,AUD,6968,2020-10-02,Toronto,0.2,1273
+3010,Timothy Avila,EUR,7448,2024-05-04,Mexico City,0.2,820
+3011,Angela Smith,INR,4462,2022-08-24,Mumbai,0.18,551
+3012,Victor Ortiz,MXN,5676,2025-01-11,Mexico City,0.18,3178
+3013,Susan Schmitt,MXN,6499,2024-04-02,Toronto,0.28,3645
+3014,Paul Miller,AUD,6177,2021-06-04,Toronto,0.22,1184
+3015,Charlene Johnson,JPY,5145,2024-08-07,Sydney,0.18,3834
+3016,Jennifer Garcia,INR,4858,2022-05-01,Mexico City,0.18,5325
+3017,Tyler Williams,USD,7825,2022-10-18,Mexico City,0.28,1877
+3018,Phillip Hebert,JPY,5627,2021-07-27,Toronto,0.25,5864
+3019,Eric Ray,USD,4614,2024-05-25,Berlin,0.2,2285
+3020,Michelle Thompson,JPY,4410,2021-01-10,Mumbai,0.2,705
+3021,Christopher Wong,EUR,5816,2023-07-16,New York,0.22,4273
+3022,Tammy Hardin,GBP,7048,2021-11-07,Mexico City,0.2,6718
+3023,Christina Riley,EUR,5384,2020-09-27,Tokyo,0.25,5524
+3024,John Monroe,INR,5722,2023-01-08,Mumbai,0.25,2742
+3025,Cynthia Davis,MXN,6879,2023-07-23,Mumbai,0.22,5921
+3026,Taylor Duke,INR,4534,2023-06-30,Mumbai,0.22,3181
+3027,Stephen James,CAD,3911,2023-06-23,New York,0.18,6151
+3028,Laura Brown,USD,3582,2022-05-30,Mexico City,0.25,1686
+3029,Michael Ramsey,EUR,3740,2021-07-16,Toronto,0.22,5892
+3030,Kathy Richardson,EUR,5269,2021-05-13,Mexico City,0.18,4647
+3031,Patricia Long,GBP,4528,2021-09-22,Mexico City,0.2,3876
+3032,Renee Williams,MXN,3952,2022-06-13,Sydney,0.2,5910
+3033,Daniel Kelly,GBP,6275,2021-07-19,Sydney,0.18,1750
+3034,Jennifer Cooper,USD,4669,2020-10-26,Tokyo,0.22,3536
+3035,Laura Clark,EUR,4515,2023-06-17,New York,0.22,2887
+3036,Carolyn Acosta,MXN,5291,2023-09-09,Berlin,0.22,5987
+3037,Michelle Grant,INR,6547,2024-06-16,Berlin,0.18,4247
+3038,Wanda Mckenzie,GBP,5488,2022-12-04,Berlin,0.22,3899
+3039,Nathaniel Hunt,USD,5190,2021-12-25,Berlin,0.28,1161
+3040,Felicia Bishop,USD,6597,2020-09-02,Sydney,0.25,1988

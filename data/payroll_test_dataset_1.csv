@@ -1,0 +1,41 @@
+first_name,last_name,employee_id,currency_code,basic_salary,bonus,tax_rate,location,employment_date
+Christina,Mays,1001,INR,66864,1802,0.25,New York,2023-06-07
+Misty,Foster,1002,JPY,76647,9219,0.18,Tokyo,2020-09-26
+John,Martin,1003,CAD,86671,7665,0.22,New York,2022-07-18
+Jennifer,Miller,1004,USD,49911,1755,0.22,Mumbai,2021-04-01
+Melissa,Gallagher,1005,INR,64020,9000,0.25,Berlin,2021-05-03
+Amy,Jones,1006,AUD,69498,9564,0.18,Mumbai,2021-02-01
+Heather,Moss,1007,CAD,49974,3580,0.25,London,2021-08-20
+Kendra,Lee,1008,CAD,80633,8843,0.22,Berlin,2023-09-04
+Scott,Guzman,1009,MXN,42295,7387,0.22,Mexico City,2023-06-17
+Courtney,Gregory,1010,GBP,80245,9934,0.18,Berlin,2022-01-20
+Jason,Williams,1011,USD,55440,7355,0.28,Mumbai,2022-10-29
+Christopher,Garcia,1012,AUD,41836,1863,0.18,Mumbai,2023-03-01
+Craig,Stephens,1013,GBP,82997,3400,0.22,Mumbai,2021-09-20
+Deanna,Williams,1014,INR,47496,1244,0.25,Berlin,2025-06-23
+Shelly,Dunn,1015,INR,88146,4689,0.25,Toronto,2022-11-24
+Debra,Benjamin,1016,INR,57869,5652,0.25,Tokyo,2021-10-15
+Sarah,Patterson,1017,INR,76220,7253,0.25,Tokyo,2020-12-10
+Keith,Howell,1018,EUR,40601,2556,0.25,Tokyo,2024-12-30
+Jacob,Chapman,1019,AUD,67626,3022,0.22,Sydney,2024-01-17
+Troy,Smith,1020,EUR,56749,3096,0.18,Mexico City,2024-03-25
+Madison,Mason,1021,AUD,73989,9290,0.2,Sydney,2022-06-02
+James,King,1022,CAD,82767,6507,0.18,Tokyo,2022-05-20
+Karen,Thomas,1023,JPY,41801,7565,0.18,Toronto,2025-02-04
+Amy,Davis,1024,GBP,48416,5054,0.22,Mumbai,2024-12-04
+James,Dunn,1025,GBP,82766,5738,0.25,Mexico City,2021-12-12
+Brent,Williams,1026,JPY,57700,9121,0.2,Tokyo,2024-10-18
+Brian,Frazier,1027,GBP,79525,7760,0.2,Mexico City,2025-01-25
+Paul,Gomez,1028,USD,57801,2653,0.18,Toronto,2022-05-17
+Dennis,Reyes,1029,JPY,86191,4504,0.25,Berlin,2023-02-05
+Erin,Cruz,1030,USD,74738,5971,0.28,Berlin,2021-02-25
+Sharon,Johnson,1031,USD,49899,3740,0.25,Mexico City,2021-12-20
+James,Rosario,1032,JPY,69315,7575,0.18,Mumbai,2024-04-30
+Daniel,Baird,1033,JPY,70595,7440,0.28,London,2024-09-11
+Penny,Powell,1034,USD,43969,2032,0.22,London,2021-01-17
+Lindsey,Lewis,1035,USD,72605,9835,0.18,Berlin,2020-08-13
+Michelle,Cherry,1036,MXN,79062,8658,0.2,New York,2021-08-23
+Jennifer,Hall,1037,EUR,41400,7057,0.25,London,2025-05-06
+Brian,Reyes,1038,CAD,72660,7514,0.28,London,2020-07-29
+Bryan,Martin,1039,JPY,75327,2926,0.2,Mexico City,2020-09-08
+Jason,Hobbs,1040,INR,75886,6569,0.28,New York,2022-04-08

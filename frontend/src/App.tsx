@@ -4,6 +4,7 @@ import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
 import { MappingPage } from './pages/MappingPage';
 import { SkillsPage } from './pages/SkillsPage';
+import CompliancePage from './pages/CompliancePage';
 import { theme } from './theme/theme';
 import { LoadingOverlay } from './components/LoadingOverlay';
 import { Suspense } from 'react';
@@ -25,22 +26,28 @@ const NotFound = () => (
   </div>
 );
 
+// Layout with conditional full-width support
+const AppLayout = ({ children }: { children: React.ReactNode }) => {
+  return <Layout>{children}</Layout>;
+};
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <Layout>
+        <AppLayout>
           <Suspense fallback={<LoadingOverlay message="Loading..." />}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/mapping" element={<MappingPage />} />
               <Route path="/skills" element={<SkillsPage />} />
+              <Route path="/compliance" element={<CompliancePage />} />
               <Route path="/404" element={<NotFound />} />
               <Route path="*" element={<Navigate to="/404" replace />} />
             </Routes>
           </Suspense>
-        </Layout>
+        </AppLayout>
       </BrowserRouter>
     </ThemeProvider>
   );

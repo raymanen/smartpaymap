@@ -1,23 +1,22 @@
 from typing import List
 
-# Standard fields for payroll mapping
+# Standard fields for payroll mapping - Canonical export schema
 STANDARD_FIELDS: List[str] = [
-    "full_name",      # For employee name fields
-    "currency",       # For currency codes/types
-    "base_salary",    # For base salary amount
-    "bonus",          # For bonus amounts
-    "total_salary",   # For combined salary calculations
-    "tax_rate",       # For tax percentage/rate
-    "location",       # For location/city names
-    "country_code",   # For country identifiers
-    "employee_id",    # For employee identifiers
-    "hire_date",      # For employment/hire dates
-    "other"          # For fields that don't match standard categories
+    "full_name",        # Employee full name
+    "employee_id",      # Unique employee identifier
+    "salary",           # Base salary amount
+    "bonus",            # Bonus amounts
+    "currency",         # Currency code (USD, EUR, etc.)
+    "tax_rate",         # Tax rate percentage
+    "location",         # Employee location/office
+    "employment_date"   # Date of employment/hire
 ]
 
 # CORS settings
 CORS_ORIGINS: List[str] = [
     "http://localhost:5173",  # Vite's default port
+    "http://localhost:5174",  # Vite backup port
+    "http://localhost:5175",  # Vite backup port
     "http://localhost:3000",  # Alternative React port
 ]
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -18,6 +18,20 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isMobile: boolean = useMediaQuery('(max-width:600px)');
+  const location = useLocation();
+  const isCompliancePage = location.pathname === '/compliance';
+  const isHomePage = location.pathname === '/';
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setScrolled(scrollTop > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <Box
@@ -33,11 +47,29 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         position="fixed"
         elevation={0}
         sx={{ 
-          background: 'linear-gradient(90deg, #3b82f6 0%, #1e40af 100%)',
-          borderBottom: '1px solid',
-          borderColor: 'rgba(255, 255, 255, 0.1)',
+          background: scrolled 
+            ? 'rgba(59, 130, 246, 0.8)' 
+            : 'rgba(59, 130, 246, 0.95)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: scrolled 
+            ? '1px solid rgba(255, 255, 255, 0.2)' 
+            : '1px solid rgba(255, 255, 255, 0.1)',
           width: '100%',
-          boxShadow: '0 4px 6px -1px rgba(30, 64, 175, 0.1), 0 2px 4px -1px rgba(30, 64, 175, 0.06)',
+          boxShadow: scrolled 
+            ? '0 8px 32px rgba(59, 130, 246, 0.2)' 
+            : '0 4px 20px rgba(59, 130, 246, 0.1)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%)',
+            pointerEvents: 'none',
+          },
         }}
       >
         <Box
@@ -116,6 +148,20 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               >
                 Skills
               </Link>
+              <Link
+                component={RouterLink}
+                to="/compliance"
+                sx={{
+                  textDecoration: 'none',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  '&:hover': { color: 'white' },
+                  fontSize: { xs: '0.9rem', sm: '1rem' },
+                  fontWeight: 500,
+                  transition: 'color 0.2s ease',
+                }}
+              >
+                Compliance
+              </Link>
               <Button
                 component={RouterLink}
                 to="/mapping"
@@ -152,10 +198,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Toolbar placeholder to prevent content from hiding under AppBar */}
       <Toolbar sx={{ minHeight: { xs: '64px', sm: '72px' } }} />
 
-      {/* Main content wrapper */}
+      {/* Main content wrapper with conditional full-width support */}
       <Box
         component="main"
-        sx={{
+        sx={(isCompliancePage || isHomePage) ? {
+          width: '100%',
+          margin: 0,
+          padding: 0,
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        } : {
           width: '100%',
           maxWidth: '1440px',
           margin: '0 auto',

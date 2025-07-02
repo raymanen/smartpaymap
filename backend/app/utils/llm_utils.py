@@ -1,11 +1,12 @@
-from typing import Dict, List, TypedDict, Optional, Union
-import os
 import json
 import logging
-from openai import OpenAI
-from openai.types.chat import ChatCompletion
+import os
+from typing import Any, Dict, List, TypedDict, Union
+
 import httpx
 from dotenv import load_dotenv
+from openai import OpenAI
+from openai.types.chat import ChatCompletion
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -15,26 +16,29 @@ logger = logging.getLogger(__name__)
 load_dotenv(verbose=True)
 
 # Validate environment variables
-hf_api_key = os.getenv('HF_API_KEY')
+hf_api_key = os.getenv("HF_API_KEY")
 if not hf_api_key:
     logger.warning("HF_API_KEY not found in environment variables")
 
-openai_api_key = os.getenv('OPENAI_API_KEY')
+openai_api_key = os.getenv("OPENAI_API_KEY")
 if not openai_api_key:
     logger.warning("OPENAI_API_KEY not found in environment variables")
 
 # Constants
 HUGGING_FACE_API_URL = "https://router.huggingface.co/novita/v3/openai/chat/completions"
 
+
 class MappingSuggestion(TypedDict):
     """Type definition for the mapping suggestion response."""
+
     mappings: Dict[str, Union[str, List[str]]]
     notes: List[str]
+
 
 def get_mock_response() -> MappingSuggestion:
     """
     Generate a mock response for testing or fallback scenarios.
-    
+
     Returns:
         MappingSuggestion: A predefined mapping suggestion
     """
@@ -43,14 +47,15 @@ def get_mock_response() -> MappingSuggestion:
             "full_name": ["first_name", "last_name"],
             "salary": "basic_salary",
             "currency": "currency_code",
-            "city": "location"
+            "city": "location",
         },
         "notes": [
             "Mocked: 'country_code' appears to be missing.",
             "Mocked: Consider merging 'first_name' and 'last_name' into 'full_name'.",
-            "Note: This is a fallback response. The actual AI service is unavailable."
-        ]
+            "Note: This is a fallback response. The actual AI service is unavailable.",
+        ],
     }
+
 
 def generate_llm_prompt(data: Dict[str, List[str]]) -> str:
     """
@@ -102,7 +107,10 @@ Focus on accuracy and providing clear explanations in the notes.
 """
     return prompt
 
-def get_mapping_suggestions(csv_headers: List[str], target_fields: List[str]) -> MappingSuggestion:
+
+def get_mapping_suggestions(
+    csv_headers: List[str], target_fields: List[str]
+) -> MappingSuggestion:
     """
     Get mapping suggestions for CSV headers to target fields using Hugging Face API.
     Falls back to OpenAI if Hugging Face fails.
@@ -154,101 +162,117 @@ Keep the response format simple and avoid nested structures."""
             logger.info("Attempting to use Hugging Face API...")
             headers = {
                 "Authorization": f"Bearer {hf_api_key}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             }
 
             with httpx.Client() as client:
                 logger.info(f"Making request to {HUGGING_FACE_API_URL}")
-                
+
                 # Convert the prompt to chat format
                 chat_payload = {
                     "model": "deepseek/deepseek-v3-0324",
-                    "messages": [
-                        {
-                            "role": "user",
-                            "content": prompt
-                        }
-                    ],
+                    "messages": [{"role": "user", "content": prompt}],
                     "temperature": 0.3,
-                    "max_tokens": 500
+                    "max_tokens": 500,
                 }
-                
-                logger.info(f"Request payload: {json.dumps(chat_payload, indent=2)}")
-                response = client.post(
+
+                logger.info(
+                    f"Request payload: {json.dumps(chat_payload, indent=2)}"
+                )
+                hf_response = client.post(
                     HUGGING_FACE_API_URL,
                     json=chat_payload,
                     headers=headers,
-                    timeout=30.0
+                    timeout=30.0,
                 )
-                logger.info(f"Response status code: {response.status_code}")
-                logger.info(f"Response headers: {dict(response.headers)}")
-                response.raise_for_status()
-                
+                logger.info(f"Response status code: {hf_response.status_code}")
+                logger.info(f"Response headers: {dict(hf_response.headers)}")
+                hf_response.raise_for_status()
+
                 # Parse the response
-                raw_response = response.json()
+                raw_response = hf_response.json()
                 logger.info(f"Raw response: {json.dumps(raw_response, indent=2)}")
-                
+
                 # Extract content from chat completion response
-                if isinstance(raw_response, dict) and 'choices' in raw_response:
-                    content = raw_response['choices'][0]['message']['content']
-                    
+                if isinstance(raw_response, dict) and "choices" in raw_response:
+                    content = raw_response["choices"][0]["message"]["content"]
+
                     # Try to extract JSON from the response
                     try:
                         # Find JSON-like structure in the response
                         json_str = content.strip()
-                        if json_str.startswith('```json'):
+                        if json_str.startswith("```json"):
                             # Extract JSON from code block
-                            json_start = json_str.find('{')
-                            json_end = json_str.rfind('}') + 1
+                            json_start = json_str.find("{")
+                            json_end = json_str.rfind("}") + 1
                             if json_start >= 0 and json_end > json_start:
                                 json_str = json_str[json_start:json_end]
-                        elif not json_str.startswith('{'):
-                            # If response contains explanation text before JSON, find the JSON part
-                            json_start = content.find('{')
-                            json_end = content.rfind('}') + 1
+                        elif not json_str.startswith("{"):
+                            # If response contains explanation text before JSON,
+            # find the JSON part
+                            json_start = content.find("{")
+                            json_end = content.rfind("}") + 1
                             if json_start >= 0 and json_end > json_start:
                                 json_str = content[json_start:json_end]
-                        
+
                         result = json.loads(json_str)
-                        
+
                         # Simplify the response format
                         simplified_mappings = {}
                         simplified_notes = []
-                        
+
                         # Extract simple mappings from the complex response
-                        if isinstance(result.get('mappings'), dict):
-                            for source, mapping in result['mappings'].items():
-                                if isinstance(mapping, dict) and 'source_field' in mapping:
-                                    simplified_mappings[source] = mapping['source_field']
-                                elif isinstance(mapping, dict) and 'source_fields' in mapping:
+                        if isinstance(result.get("mappings"), dict):
+                            for source, mapping in result["mappings"].items():
+                                if (
+                                    isinstance(mapping, dict)
+                                    and "source_field" in mapping
+                                ):
+                                    simplified_mappings[source] = mapping[
+                                        "source_field"
+                                    ]
+                                elif (
+                                    isinstance(mapping, dict)
+                                    and "source_fields" in mapping
+                                ):
                                     # For fields that need to be combined
-                                    simplified_mappings[source] = mapping['source_fields'][0]
-                                    simplified_notes.append(f"Note: {source} requires combining fields: {', '.join(mapping['source_fields'])}")
+                                    simplified_mappings[source] = mapping[
+                                        "source_fields"
+                                    ][0]
+                                    simplified_notes.append(
+                                        f"Note: {source} requires combining fields: "
+                                        f"{', '.join(mapping['source_fields'])}"
+                                    )
                                 elif isinstance(mapping, str):
                                     simplified_mappings[source] = mapping
-                        
+
                         # Extract notes
-                        if isinstance(result.get('notes'), list):
-                            simplified_notes.extend(result['notes'])
-                        elif isinstance(result.get('notes'), dict):
-                            for key, note in result['notes'].items():
+                        if isinstance(result.get("notes"), list):
+                            simplified_notes.extend(result["notes"])
+                        elif isinstance(result.get("notes"), dict):
+                            for key, note in result["notes"].items():
                                 simplified_notes.append(f"{key}: {note}")
-                        
+
                         # Return simplified format
                         return {
                             "mappings": simplified_mappings,
-                            "notes": simplified_notes
+                            "notes": simplified_notes,
                         }
-                            
+
                         # If we couldn't find valid JSON, create a response with the raw text
-                        logger.warning("Could not find valid JSON in Hugging Face response, using raw text")
+                        logger.warning(
+                            "Could not find valid JSON in response, "
+                            "using raw text"
+                        )
                         return {
                             "mappings": {},  # Empty mappings as placeholder
-                            "notes": [content]  # Store the raw response as a note
+                            "notes": [content],  # Store the raw response as a note
                         }
 
                     except (json.JSONDecodeError, KeyError) as e:
-                        logger.warning(f"Failed to parse Hugging Face response: {str(e)}")
+                        logger.warning(
+                            f"Failed to parse Hugging Face response: {str(e)}"
+                        )
                         # Continue to OpenAI fallback
 
     except Exception as e:
@@ -262,28 +286,27 @@ Keep the response format simple and avoid nested structures."""
             client = OpenAI(api_key=openai_api_key)
             response: ChatCompletion = client.chat.completions.create(
                 model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "user", "content": prompt}
-                ],
+                messages=[{"role": "user", "content": prompt}],
                 temperature=0.3,
-                max_tokens=500
+                max_tokens=500,
             )
             content = response.choices[0].message.content
             try:
-                result = json.loads(content)
-                if isinstance(result, dict) and \
-                   'mappings' in result and \
-                   'notes' in result and \
-                   isinstance(result['mappings'], dict) and \
-                   isinstance(result['notes'], list):
-                    logger.info("Successfully got response from OpenAI API")
-                    return result
+                result = json.loads(content or "{}")
+                if (
+                    isinstance(result, dict)
+                    and "mappings" in result
+                    and "notes" in result
+                    and isinstance(result["mappings"], dict)
+                    and isinstance(result["notes"], list)
+                ):
+                    logger.info(
+                        "Successfully got response from OpenAI API"
+                    )
+                    return result  # type: ignore
             except (json.JSONDecodeError, KeyError) as e:
                 logger.error(f"Failed to parse OpenAI response: {str(e)}")
-                return {
-                    "mappings": {},
-                    "notes": [content]
-                }
+                return {"mappings": {}, "notes": [content or "No response content"]}
         except Exception as e:
             logger.error(f"Error with OpenAI API: {str(e)}")
 
@@ -291,5 +314,5 @@ Keep the response format simple and avoid nested structures."""
     logger.error("Both Hugging Face and OpenAI APIs failed")
     return {
         "mappings": {},
-        "notes": ["Failed to get mapping suggestions from both APIs"]
-    } 
+        "notes": ["Failed to get mapping suggestions from both APIs"],
+    }

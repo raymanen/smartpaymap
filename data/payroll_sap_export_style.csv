@@ -1,0 +1,41 @@
+emp_id,given_name,surname,salary_base,location_code,curr,hire_date,bonus_amt,tax_percent
+2001,Sophia,Stevens,74491,Mexico City,USD,2023-02-09,7813,0.28
+2002,Taylor,Thomas,46410,Mumbai,GBP,2022-11-18,6748,0.28
+2003,Travis,Brown,56710,Mumbai,USD,2021-10-22,8989,0.2
+2004,Crystal,Spence,72911,New York,CAD,2023-06-28,6537,0.18
+2005,Toni,Brown,85849,Sydney,JPY,2021-03-07,6322,0.18
+2006,Kelly,Haley,79435,Mumbai,AUD,2020-12-27,7691,0.2
+2007,David,Keller,61602,London,CAD,2020-11-25,11551,0.18
+2008,Dylan,Graves,54320,Mexico City,CAD,2023-08-12,11070,0.18
+2009,Katrina,Thomas,85178,Mumbai,GBP,2023-10-22,8016,0.18
+2010,Patrick,Todd,50842,Mumbai,MXN,2022-12-04,6847,0.25
+2011,Belinda,Anderson,65241,Mumbai,JPY,2024-03-09,1861,0.28
+2012,Jennifer,Davis,76185,Berlin,MXN,2021-05-09,8440,0.2
+2013,Denise,Estrada,59414,Mumbai,CAD,2024-12-18,10215,0.25
+2014,Jessica,Stewart,65838,Mexico City,JPY,2023-06-14,8584,0.28
+2015,Maria,Hall,66272,Mumbai,GBP,2023-10-24,11731,0.18
+2016,Kelly,House,63779,New York,USD,2021-09-18,2362,0.18
+2017,Angela,Lyons,52519,Tokyo,INR,2024-03-23,11176,0.28
+2018,Carla,Park,52954,Berlin,GBP,2024-05-07,6296,0.22
+2019,Shawn,Harris,61625,Sydney,AUD,2022-10-14,11174,0.22
+2020,Jacob,Russo,94486,New York,INR,2023-07-14,4315,0.28
+2021,Barry,Bright,76541,Toronto,GBP,2025-01-14,4041,0.22
+2022,Heather,Burton,65572,Tokyo,GBP,2024-08-06,5722,0.2
+2023,Monica,Shaw,78656,Mexico City,CAD,2023-11-05,6925,0.22
+2024,Brooke,Bruce,63960,Tokyo,AUD,2021-10-04,9418,0.18
+2025,Erika,Johnson,61842,Sydney,MXN,2024-07-24,2568,0.25
+2026,Margaret,Bradley,52733,Tokyo,MXN,2024-11-01,8278,0.22
+2027,Toni,Cabrera,84412,Mexico City,JPY,2022-01-20,2559,0.28
+2028,Matthew,Rodriguez,56221,Sydney,CAD,2023-08-13,6508,0.2
+2029,Susan,Miller,57277,Mumbai,GBP,2022-09-20,1648,0.2
+2030,Debra,Brown,66719,Sydney,EUR,2023-06-14,11178,0.18
+2031,Christopher,Potter,87584,Sydney,MXN,2020-09-16,11232,0.28
+2032,Jake,Rodriguez,57191,Mexico City,MXN,2023-02-06,3630,0.22
+2033,Patricia,Best,78437,Mumbai,USD,2023-11-06,6979,0.28
+2034,Madison,Riley,45480,Toronto,AUD,2022-03-26,2123,0.25
+2035,Gary,Cunningham,73473,Sydney,EUR,2023-01-20,11697,0.28
+2036,Jerry,Browning,46784,Toronto,MXN,2024-08-24,2426,0.25
+2037,Kelly,Graham,77431,Mexico City,GBP,2021-02-23,11924,0.18
+2038,Edward,Blanchard,71419,Tokyo,GBP,2020-07-11,8527,0.28
+2039,Katherine,Brown,94517,Mexico City,GBP,2022-09-22,2357,0.22
+2040,Trevor,Jackson,79568,Sydney,JPY,2025-02-20,3921,0.18
