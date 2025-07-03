@@ -1,4 +1,4 @@
-import { createTheme, ThemeOptions, PaletteOptions } from '@mui/material/styles';
+import { createTheme, ThemeOptions, PaletteOptions, Duration } from '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -26,6 +26,12 @@ declare module '@mui/material/styles' {
       dark: string;
       contrastText: string;
     };
+  }
+  interface Duration {
+    fast: number;
+    normal: number;
+    slow: number;
+    slower: number;
   }
 }
 
@@ -110,6 +116,28 @@ const themeOptions: ThemeOptions = {
   shape: {
     borderRadius: 12,
   },
+  transitions: {
+    easing: {
+      easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
+      easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
+      sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
+    },
+    duration: {
+      shortest: 150,
+      shorter: 200,
+      short: 250,
+      standard: 300,
+      complex: 375,
+      enteringScreen: 225,
+      leavingScreen: 195,
+      // Custom durations
+      fast: 150,
+      normal: 300,
+      slow: 500,
+      slower: 800,
+    },
+  },
   components: {
     MuiButton: {
       styleOverrides: {
@@ -153,4 +181,17 @@ const themeOptions: ThemeOptions = {
   },
 };
 
-export const theme = createTheme(themeOptions); 
+// Create a theme instance with our options
+export const theme = createTheme(themeOptions);
+
+// Add custom transition properties for use in components
+theme.transitions = {
+  ...theme.transitions,
+  duration: {
+    ...theme.transitions.duration,
+    fast: 150,
+    normal: 300,
+    slow: 500,
+    slower: 800,
+  },
+}; 

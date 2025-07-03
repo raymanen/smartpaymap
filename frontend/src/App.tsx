@@ -26,17 +26,12 @@ const NotFound = () => (
   </div>
 );
 
-// Layout with conditional full-width support
-const AppLayout = ({ children }: { children: React.ReactNode }) => {
-  return <Layout>{children}</Layout>;
-};
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <AppLayout>
+        <Layout>
           <Suspense fallback={<LoadingOverlay message="Loading..." />}>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -47,7 +42,7 @@ function App() {
               <Route path="*" element={<Navigate to="/404" replace />} />
             </Routes>
           </Suspense>
-        </AppLayout>
+        </Layout>
       </BrowserRouter>
     </ThemeProvider>
   );
