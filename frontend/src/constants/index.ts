@@ -78,18 +78,6 @@ export const TECHNOLOGIES = [
 
 export const FEATURES = [
   {
-    title: 'AI-Powered Mapping',
-    description: 'Leverage advanced machine learning algorithms to automatically map payroll data fields with 95% accuracy, reducing manual effort and errors.',
-    icon: "SmartToy",
-    gradient: '#3b82f6, #1e40af',
-  },
-  {
-    title: 'Cross-System Compliance',
-    description: 'Ensure payroll data complies with requirements across multiple systems and jurisdictions, preventing costly compliance issues.',
-    icon: "Shield",
-    gradient: '#8b5cf6, #4c1d95',
-  },
-  {
     title: 'Data Transformation',
     description: 'Transform payroll data between formats with our intelligent conversion engine that preserves data integrity and relationships.',
     icon: "AutoAwesome",

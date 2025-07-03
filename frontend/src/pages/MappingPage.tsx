@@ -26,7 +26,7 @@ import {
   SecondaryButton,
   LoadingContainer
 } from '../styles/components/MappingPage.styles';
-import { Layout } from '../components/Layout';
+
 
 const steps = ['Upload CSV', 'Preview Data', 'Map Fields', 'Policy Simulation'];
 
@@ -212,10 +212,9 @@ export const MappingPage: React.FC = () => {
   };
 
   return (
-    <Layout>
-      <MappingContainer>
-        <MappingTitle variant="h2">
-          Payroll Data Mapping
+    <MappingContainer>
+      <MappingTitle variant="h2">
+        Payroll Data Mapping
         </MappingTitle>
         <MappingSubtitle variant="subtitle1">
           Map your CSV fields to standardized payroll data fields using our AI-powered system
@@ -233,6 +232,5 @@ export const MappingPage: React.FC = () => {
           {renderStepContent()}
         </StepCard>
       </MappingContainer>
-    </Layout>
   );
 }; 

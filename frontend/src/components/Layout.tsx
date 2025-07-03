@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import logo from '../assets/logo.svg';
+import Footer from './Footer';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -196,7 +197,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </AppBar>
 
       {/* Toolbar placeholder to prevent content from hiding under AppBar */}
-      <Toolbar sx={{ minHeight: { xs: '64px', sm: '72px' } }} />
+      {!isCompliancePage && <Toolbar sx={{ minHeight: { xs: '64px', sm: '72px' } }} />}
 
       {/* Main content wrapper with conditional full-width support */}
       <Box
@@ -221,6 +222,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         {children}
       </Box>
+
+      <Footer />
     </Box>
   );
 }; 

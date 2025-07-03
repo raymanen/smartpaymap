@@ -2,13 +2,17 @@ import { styled } from '@mui/material/styles';
 import { Box, Typography, Card } from '@mui/material';
 
 // Main container with gradient background
-export const ComplianceContainer = styled(Box)(() => ({
-  minHeight: '100vh',
+export const ComplianceContainer = styled(Box)(({ theme }) => ({
+  minHeight: 'calc(100vh - 140px)', // Adjust for header and footer
   background: 'linear-gradient(90deg, #3b82f6 0%, #1e40af 100%)',
   position: 'relative',
   width: '100%',
   margin: 0,
   padding: 0,
+  paddingTop: '72px',
+  [theme.breakpoints.down('sm')]: {
+    paddingTop: '64px',
+  },
 }));
 
 // Background gradient overlay
@@ -83,6 +87,8 @@ export const HeroDescription = styled(Typography)(() => ({
   maxWidth: '500px',
   margin: '0 auto',
   lineHeight: 1.5,
+  paddingTop: '20px',
+  paddingBottom: '40px',
 }));
 
 // Stats container

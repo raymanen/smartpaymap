@@ -1,6 +1,5 @@
 import React from 'react';
 import ComplianceHeatmap from '../components/ComplianceHeatmap';
-import { Layout } from '../components/Layout';
 import {
   ComplianceContainer,
   BackgroundOverlay,
@@ -36,32 +35,27 @@ const CompliancePage: React.FC = () => {
   const features = [
     {
       title: 'Real-time Monitoring',
-      description: 'Stay ahead of regulatory changes with our real-time compliance monitoring system.',
-      icon: '🔍'
+      description: 'Stay ahead of regulatory changes with our real-time compliance monitoring system.'
     },
     {
       title: 'Risk Assessment',
-      description: 'Identify and quantify compliance risks across different jurisdictions and payment types.',
-      icon: '⚠️'
+      description: 'Identify and quantify compliance risks across different jurisdictions and payment types.'
     },
     {
       title: 'Automated Reporting',
-      description: 'Generate comprehensive compliance reports with a single click for any region.',
-      icon: '📊'
+      description: 'Generate comprehensive compliance reports with a single click for any region.'
     },
     {
       title: 'Regulatory Updates',
-      description: 'Receive instant notifications about regulatory changes affecting your payroll operations.',
-      icon: '📝'
+      description: 'Receive instant notifications about regulatory changes affecting your payroll operations.'
     }
   ];
 
   return (
-    <Layout>
-      <ComplianceContainer>
-        <BackgroundOverlay />
-        
-        {/* Hero Section */}
+    <ComplianceContainer>
+      <BackgroundOverlay />
+      
+      {/* Hero Section */}
         <HeroSection>
           <ContentContainer>
             <HeroBadge>
@@ -110,7 +104,7 @@ const CompliancePage: React.FC = () => {
             <FeaturesGrid>
               {features.map((feature, index) => (
                 <FeatureCard key={index}>
-                  <div style={{ fontSize: '32px', marginBottom: '16px' }}>{feature.icon}</div>
+                  <div style={{ fontSize: '32px', marginBottom: '16px' }}></div>
                   <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>{feature.title}</h3>
                   <p style={{ fontSize: '14px', color: '#64748b' }}>{feature.description}</p>
                 </FeatureCard>
@@ -119,7 +113,6 @@ const CompliancePage: React.FC = () => {
           </ContentContainer>
         </FeatureSection>
       </ComplianceContainer>
-    </Layout>
   );
 };
 
