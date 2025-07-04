@@ -1,0 +1,40 @@
+services:
+  # Frontend service (React + TypeScript + Vite)
+  frontend:
+    build:
+      context: ./frontend
+      # Use buildkit for faster builds
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"  # Map host port 3000 to container port 80
+    networks:
+      - smartpaymap-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+    # For development, you might want to mount the source code
+    # volumes:
+    #   - ./frontend:/app
+    #   - /app/node_modules
+
+  # Backend service (FastAPI)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env  # Load environment variables from .env file
+    ports:
+      - "8000:8000"  # Map host port 8000 to container port 8000
+    volumes:
+      - ./data:/app/data  # Mount the data directory
+    networks:
+      - smartpaymap-network
+    restart: unless-stopped
+    # For Apple Silicon compatibility - use only if needed
+    # platform: linux/amd64
+
+# Define a custom network
+networks:
+  smartpaymap-network:
+    driver: bridge 

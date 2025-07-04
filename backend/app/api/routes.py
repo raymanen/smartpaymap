@@ -1,9 +1,10 @@
-from fastapi import APIRouter, File, UploadFile, HTTPException
+from fastapi import APIRouter, File, UploadFile, HTTPException, Depends
 from fastapi.responses import StreamingResponse
 from datetime import datetime
 import logging
 import pandas as pd
 import io
+import json
 from ..models import (
     PayrollData, 
     AnalysisResponse, 
@@ -28,22 +29,14 @@ compliance_service = ComplianceAnalysisService()
 logger = logging.getLogger(__name__)
 
 @router.get("/ping")
-async def health_check():
-    """Health check endpoint."""
+async def ping_check():
+    """Simple ping check endpoint."""
     return {"message": "pong"}
 
-@router.get("/health")
-async def detailed_health_check():
-    """Detailed health check endpoint."""
-    return {
-        "status": "healthy",
-        "version": "0.1.0",
-        "endpoints": {
-            "analyze": "operational",
-            "upload": "operational",
-            "finalize": "operational"
-        }
-    }
+@router.get("/health", status_code=200)
+async def health_check():
+    """Health check endpoint for Docker."""
+    return {"status": "ok", "message": "API is running"}
 
 @router.post("/analyze", response_model=AnalysisResponse)
 async def analyze_payroll_data(data: PayrollData) -> AnalysisResponse:

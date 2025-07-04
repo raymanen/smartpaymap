@@ -2,16 +2,16 @@
 I built this project entirely from scratch for one reason:
 To apply for the Product Engineering Internship at Global Expat Pay.
 
-When I read the job description, it immediately stood out as the kind of team I've always wanted to be part of where meaningful problems are solved with real code, and where AI is applied not as a trend, but as a practical tool to improve people’s lives and workflows.
+When I read the job description, it immediately stood out as the kind of team I've always wanted to be part of where meaningful problems are solved with real code, and where AI is applied not as a trend, but as a practical tool to improve people's lives and workflows.
 
-I didn’t just want to apply with a CV.
+I didn't just want to apply with a CV.
 I wanted to show what I could do, and prove that I'm already thinking like a product-minded engineer.
 
-I’m deeply excited by the possibility of joining your team, not just for the internship, but for the long term.
-I’m here to learn fast, contribute with care, and grow alongside the mission of Global Expat Pay.
+I'm deeply excited by the possibility of joining your team, not just for the internship, but for the long term.
+I'm here to learn fast, contribute with care, and grow alongside the mission of Global Expat Pay.
 
 The project below, SmartPayMap, is my way of saying:
-"I’m serious about this opportunity, and I’m ready to earn it."
+"I'm serious about this opportunity, and I'm ready to earn it."
 
 Project screenshots
 <img width="1470" alt="Screenshot 2025-06-30 at 14 11 55" src="https://github.com/user-attachments/assets/6c685029-7db5-40cd-87ad-303d6db78ed4" />
@@ -181,3 +181,81 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Made with ❤️ by RAYMAN**
 
 *Simplifying payroll data management with AI*
+
+# Docker Setup for SmartPayMap
+
+This project uses Docker and Docker Compose for easy development and deployment.
+
+## Prerequisites
+
+- Docker installed on your machine
+- Docker Compose installed on your machine
+
+## Environment Setup
+
+1. Copy the example environment file:
+
+```bash
+cp backend/example.env backend/.env
+```
+
+2. Edit the `.env` file and add your API keys:
+
+```
+HF_API_KEY=your_huggingface_api_key
+OPENAI_API_KEY=your_openai_api_key
+```
+
+## Running the Application
+
+### Development Mode
+
+```bash
+# Build and start the containers
+docker-compose up -d
+
+# Check the logs
+docker-compose logs -f
+```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+
+### Production Mode
+
+For production, you may want to use the production-optimized configuration:
+
+```bash
+# Build and start the containers in production mode
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+## Stopping the Application
+
+```bash
+# Stop the containers
+docker-compose down
+
+# Stop the containers and remove volumes
+docker-compose down -v
+```
+
+## Container Management
+
+```bash
+# Rebuild the containers
+docker-compose build
+
+# Restart a specific service
+docker-compose restart frontend
+docker-compose restart backend
+
+# View container logs
+docker-compose logs -f frontend
+docker-compose logs -f backend
+```
+
+## Apple Silicon (M1/M2) Compatibility
+
+This setup is optimized for Apple Silicon Macs. The backend container specifies the `linux/amd64` platform to ensure compatibility with packages that might not be fully supported on ARM architecture.

@@ -70,3 +70,12 @@ yarn-error.log*
 .DS_Store
 *.pem
 .vercel
+
+# Docker
+.docker/data
+*.env
+!example.env
+docker-compose.override.yml
+
+# Build artifacts from Docker
+docker-build/
