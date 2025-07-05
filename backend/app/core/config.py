@@ -1,4 +1,9 @@
+import os
 from typing import List
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv(verbose=True)
 
 # Standard fields for payroll mapping - Canonical export schema
 STANDARD_FIELDS: List[str] = [
@@ -12,13 +17,18 @@ STANDARD_FIELDS: List[str] = [
     "employment_date"   # Date of employment/hire
 ]
 
-# CORS settings
-CORS_ORIGINS: List[str] = [
-    "http://localhost:5173",  # Vite's default port
-    "http://localhost:5174",  # Vite backup port
-    "http://localhost:5175",  # Vite backup port
-    "http://localhost:3000",  # Alternative React port
-]
+# CORS settings - Load from environment or use defaults
+cors_origins_str = os.getenv("BACKEND_CORS_ORIGINS", '["http://localhost:5173","http://localhost:3000"]')
+try:
+    import json
+    CORS_ORIGINS = json.loads(cors_origins_str)
+except Exception:
+    CORS_ORIGINS = [
+        "http://localhost:5173",  # Vite's default port
+        "http://localhost:5174",  # Vite backup port
+        "http://localhost:5175",  # Vite backup port
+        "http://localhost:3000",  # Alternative React port
+    ]
 
 # API settings
 API_TITLE = "SmartPayMap API"

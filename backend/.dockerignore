@@ -22,7 +22,7 @@ wheels/
 *.egg
 
 # Virtual Environment
-.env
+# .env  # <-- Commented out to allow .env file to be copied
 .venv
 venv/
 ENV/
