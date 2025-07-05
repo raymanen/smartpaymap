@@ -25,6 +25,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
+import { API_CONFIG } from '../constants';
 
 interface MappingTableProps {
   headers: string[];
@@ -84,7 +85,7 @@ export const MappingTable: React.FC<MappingTableProps> = ({ headers, rows = [], 
       setLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:8000/analyze', {
+      const response = await fetch(`${API_CONFIG.baseUrl}/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

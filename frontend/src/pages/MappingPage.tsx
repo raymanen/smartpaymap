@@ -11,6 +11,7 @@ import { UploadButton } from '../components/UploadButton';
 import { UploadPreview } from '../components/UploadPreview';
 import { MappingTable } from '../components/MappingTable';
 import PolicySimulationPanel from '../components/PolicySimulationPanel';
+import { API_CONFIG } from '../constants';
 import {
   MappingContainer,
   MappingTitle,
@@ -46,7 +47,7 @@ export const MappingPage: React.FC = () => {
 
   const handleMappingSubmit = async (mappings: Record<string, string>) => {
     try {
-      const response = await fetch('http://localhost:8000/finalize', {
+      const response = await fetch(`${API_CONFIG.baseUrl}/finalize`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +88,7 @@ export const MappingPage: React.FC = () => {
         return rowObject;
       });
 
-      const response = await fetch('http://localhost:8000/export_standardized', {
+      const response = await fetch(`${API_CONFIG.baseUrl}/export_standardized`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

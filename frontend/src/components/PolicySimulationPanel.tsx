@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_CONFIG } from '../constants';
 
 // Country data with default currencies
 const COUNTRIES = [
@@ -89,7 +90,7 @@ const PolicySimulationPanel: React.FC<PolicySimulationPanelProps> = ({ headers, 
     };
 
     try {
-      const response = await fetch('http://localhost:8000/simulate_policy_impact', {
+      const response = await fetch(`${API_CONFIG.baseUrl}/simulate_policy_impact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

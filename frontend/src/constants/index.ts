@@ -30,9 +30,10 @@ export const APP_CONFIG = {
 // ========== API CONFIGURATION ==========
 
 export const API_CONFIG = {
-  baseUrl: import.meta.env.PROD 
-    ? 'https://api.smartpaymap.com' 
-    : 'http://localhost:8000',
+  baseUrl: import.meta.env.VITE_API_BASE_URL || 
+    (import.meta.env.PROD 
+      ? '/api'  // Use relative path in production
+      : 'http://localhost:8000'),
   timeout: 10000,
   retryAttempts: 3,
 } as const;

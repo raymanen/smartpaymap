@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography, Alert, CircularProgress } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { API_CONFIG } from '../constants';
 
 interface UploadButtonProps {
   onUpload: (headers: string[], rows: string[][]) => void;
@@ -21,7 +22,7 @@ export const UploadButton: React.FC<UploadButtonProps> = ({ onUpload }) => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('http://localhost:8000/upload', {
+      const response = await fetch(`${API_CONFIG.baseUrl}/upload`, {
         method: 'POST',
         body: formData,
       });

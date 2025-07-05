@@ -8,6 +8,7 @@ import {
   CountryRisk,
   RISK_LEVELS
 } from './compliance';
+import { API_CONFIG } from '../constants';
 
 // Simplified risk level configuration for better performance
 const RISK_LEVELS_CONFIG = {
@@ -67,7 +68,7 @@ const ComplianceHeatmap: React.FC = memo(() => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/compliance_heatmap');
+      const response = await fetch(`${API_CONFIG.baseUrl}/compliance_heatmap`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
